@@ -44,14 +44,29 @@ class AreaCalculator
         return array_sum($area);
     }
 
-    public function output()
+}
+
+class SumCalculatorOutputter
+{
+    private $areaCalculator;
+
+    public function __construct(AreaCalculator $areaCalculator)
     {
-        return implode('', array(
-            "<h1>",
-            "Suma de todas las áreas: ",
-            $this->sum(),
-            "</h1>"
-        ));
+        $this->areaCalculator = $areaCalculator;
+    }
+
+    public function toJson()
+    {
+        $data = array (
+            'sum' => $this->areaCalculator->sum()
+        );
+
+        return json_encode($data);
+    }
+
+    public function toHtml()
+    {
+        return implode('', array('/n <h1>','suma de todas las areas: ', $this->areaCalculator->sum(),'</h1>'));
     }
 }
 
@@ -61,7 +76,9 @@ $shapes = array(
 );
 
 $areas = new AreaCalculator($shapes);
+$output = new SumCalculatorOutputter($areas);
 
-echo $areas->output();
+echo $output->toJson();
+echo $output->toHtml()
 
 ?>
